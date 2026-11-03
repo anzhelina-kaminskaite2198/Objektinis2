@@ -8,13 +8,28 @@
 #include <string>
 using namespace std;
 
-struct Studentas {
+class Studentas {
+private: 
     string vardas;
     string pavarde;
     vector<double> namuDarbai;
     double egzaminas;
     double galutinisVid;
     double galutinisMed;
+public:
+    Studentas(string V="", string P="", vector<int>ND={}, int E=0,int GV=0, int GM=0): 
+    vardas{V}, pavarde{P}, namuDarbai{ND}, egzaminas{E}, galutinisVid{GV}, galutinisMed{GM}  {cout << "Studentas sukurtas";};
+    ~Studentas(){ // destruktorius butent toks, nes jis viks net jei mes pakeisime kinmatuosius.
+        vardas.clear();
+        pavarde.clear();
+        namuDarbai.clear();
+        egzaminas = 0;
+        galutinisVid = 0;
+        galutinisMed = 0;
+    }
+    string vardas() const {return vardas;}
+    string pavarde() const {return pavarde;}
+
     friend istream& operator >> (istream& in, Studentas& A) {
         in >> A.vardas >> A.pavarde;
         return in;
