@@ -3,37 +3,60 @@
 
 #include <string>
 #include <vector>
-#include <chrono>
 #include <iostream>
-#include <string>
-using namespace std;
+#include <utility>
 
 class Studentas {
-private: 
-    string vardas;
-    string pavarde;
-    vector<double> namuDarbai;
-    double egzaminas;
-    double galutinisVid;
-    double galutinisMed;
+private:
+    std::string vardas_;
+    std::string pavarde_;
+    std::vector<double> namuDarbai_;
+    double egzaminas_;
+    double galutinisVid_;
+    double galutinisMed_;
+
 public:
-    Studentas(string V="", string P="", vector<int>ND={}, int E=0,int GV=0, int GM=0): 
-    vardas{V}, pavarde{P}, namuDarbai{ND}, egzaminas{E}, galutinisVid{GV}, galutinisMed{GM}  {cout << "Studentas sukurtas";};
-    ~Studentas(){ // destruktorius butent toks, nes jis viks net jei mes pakeisime kinmatuosius.
-        vardas.clear();
-        pavarde.clear();
-        namuDarbai.clear();
-        egzaminas = 0;
-        galutinisVid = 0;
-        galutinisMed = 0;
-    }
-    string vardas() const {return vardas;}
-    string pavarde() const {return pavarde;}
+    Studentas() : egzaminas_(0), galutinisVid_(0), galutinisMed_(0) {}
 
-    friend istream& operator >> (istream& in, Studentas& A) {
-        in >> A.vardas >> A.pavarde;
-        return in;
+    Studentas(std::string v = "", std::string p = "", std::vector<double> nd ={}, double egz = 0)
+        : vardas_(std::move(v)), pavarde_(std::move(p)),
+          namuDarbai_(std::move(nd)), egzaminas_(egz),
+          galutinisVid_(0), galutinisMed_(0) {}
+
+    Studentas(const Studentas& o)
+        : vardas_(o.vardas_), pavarde_(o.pavarde_), namuDarbai_(o.namuDarbai_),
+          egzaminas_(o.egzaminas_), galutinisVid_(o.galutinisVid_),
+          galutinisMed_(o.galutinisMed_) {}
+
+    Studentas(Studentas&& o) noexcept
+        : vardas_(std::move(o.vardas_)), pavarde_(std::move(o.pavarde_)),
+          namuDarbai_(std::move(o.namuDarbai_)), egzaminas_(o.egzaminas_),
+          galutinisVid_(o.galutinisVid_), galutinisMed_(o.galutinisMed_) {}
+
+    Studentas& operator=(const Studentas& o) {
+        if (this != &o) {
+            vardas_ = o.vardas_;
+            pavarde_ = o.pavarde_;
+            namuDarbai_ = o.namuDarbai_;
+            egzaminas_ = o.egzaminas_;
+            galutinisVid_ = o.galutinisVid_;
+            galutinisMed_ = o.galutinisMed_;
+        }
+        return *this;
     }
+
+    Studentas& operator=(Studentas&& o) noexcept {
+        if (this != &o) {
+            vardas_ = std::move(o.vardas_);
+            pavarde_ = std::move(o.pavarde_);
+            namuDarbai_ = std::move(o.namuDarbai_);
+            egzaminas_ = o.egzaminas_;
+            galutinisVid_ = o.galutinisVid_;
+            galutinisMed_ = o.galutinisMed_;
+        }
+        return *this;
+    }
+
+    ~Studentas() {}
 };
-
 #endif
