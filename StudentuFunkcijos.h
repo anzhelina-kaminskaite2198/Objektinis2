@@ -225,7 +225,7 @@ int IvestiStudenta(Container& studentai) {
                         continue;
                     }
 
-                    studentas.setEgzaminas = egzoPazymys;
+                    studentas.setEgzaminas(egzoPazymys);
                     break;
                 } catch (const invalid_argument& e) {
                     cout << "\033[31mKlaida: ivestas ne skaicius. Bandykite dar karta.\033[0m" << endl;
@@ -235,14 +235,14 @@ int IvestiStudenta(Container& studentai) {
         }
         case 2: {
             double egzPazymys = dist(gen);
-            studentas.setEgzaminas = egzPazymys;
+            studentas.setEgzaminas(egzPazymys);
             cout << "Sugeneruotas egzamino pazymys: " << fixed << setprecision(2) << egzPazymys << endl;
             break;
         }
     }
     
-    studentas.setGalutinisVid = Vidurkis(studentas);
-    studentas.setGalutinisMed = Mediana(studentas);
+    studentas.setGalutinisVid(Vidurkis(studentas));
+    studentas.setGalutinisMed(Mediana(studentas));
     studentai.push_back(studentas);
  
     cout << "\n \033[32m Studentas sekmingai ivestas! \033[0m\n\n"
@@ -343,7 +343,7 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
 
         Studentas studentas(move(vardas), move(pavarde), move(nd), egz);
         studentas.setGalutinisVid(Vidurkis(studentas));
-        studentas.setGalutinisMed((studentas));
+        studentas.setGalutinisMed(Mediana(studentas));
         studentai.push_back(move(studentas));
 
     }
@@ -376,7 +376,7 @@ double DalytiStudentus_S2(Container& studentai, Container& vargseliai, Container
 
     if constexpr (is_same_v<Container, vector<Studentas>>) {
 
-        RikiotiStudentus (studentai, [](const Studentas& a, const Studentas& b) { return a.galutinisVid > b.galutinisVid; });
+        RikiotiStudentus (studentai, [](const Studentas& a, const Studentas& b) { return a.galutinisVid() > b.galutinisVid(); });
         while (!studentai.empty() && studentai.back().galutinisVid() < 5.0) {
             vargseliai.push_back(std::move(studentai.back()));
             studentai.pop_back();
@@ -385,7 +385,7 @@ double DalytiStudentus_S2(Container& studentai, Container& vargseliai, Container
     } else {
 
         for (auto it = studentai.begin(); it != studentai.end(); ) { 
-        if (it->galutinisVid < 5.0) {
+        if (it->galutinisVid() < 5.0) {
             vargseliai.push_back(move(*it));
             it = studentai.erase(it);
             } else {
@@ -430,7 +430,7 @@ double DalytiStudentus_Optimizuota( Container& studentai, Container& vargseliai,
     } else {
         for (auto it = studentai.begin(); it != studentai.end();) {
             auto kitas = next(it);
-            if (it->galutinisVid < 5.0)
+            if (it->galutinisVid() < 5.0)
                 vargseliai.splice(vargseliai.end(), studentai, it);
             it = kitas;
         }
