@@ -306,10 +306,11 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
 
     while (getline(failas, eilute)) {
         stringstream ss(eilute);
-        Studentas studentas;
-        ss >> studentas.vardas();
-        ss >> studentas.pavarde();
+        string vardas;
+        string pavarde;
+        ss >> vardas >> pavarde;
 
+        vector<double> nd;
         string strPazymys;
         bool neteisingasPazymys = false;
 
@@ -319,7 +320,7 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
                 double pazymys = stod(strPazymys);
 
                 if ( pazymys >= 0 && pazymys <= 10) {
-                    studentas.pridetiND(pazymys);
+                    nd.push_back(pazymys);
                 } else {
                     neteisingasPazymys = true; 
                     break;
@@ -330,18 +331,19 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
                 break;
             }
         }
-        if (neteisingasPazymys||studentas.namuDarbai().empty()) {
+        if (neteisingasPazymys||nd.empty()) {
             NeteisingiDuomenys blogasStudentas;
-            blogasStudentas.vardas = studentas.vardas();
-            blogasStudentas.pavarde = studentas.pavarde();
+            blogasStudentas.vardas = vardas;
+            blogasStudentas.pavarde = pavarde;
             neteisingi.push_back(blogasStudentas);
             continue;
         }
-        studentas.egzaminas() = studentas.namuDarbai().back();
-        studentas.namuDarbai.pop_back();
+        double egz = nd.back();
+        nd.pop_back();
 
-        studentas.galutinisVid() = Vidurkis(studentas);
-        studentas.galutinisMed() = Mediana(studentas);
+        Studentas studentas(move(vardas), move(pavarde), move(nd), egz);
+        studentas.setGalutinisVid(Vidurkis(studentas));
+        studentas.setGalutinisMed((studentas));
         studentai.push_back(move(studentas));
 
     }
