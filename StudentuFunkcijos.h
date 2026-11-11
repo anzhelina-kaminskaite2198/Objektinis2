@@ -333,8 +333,8 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
         }
         if (neteisingasPazymys||nd.empty()) {
             NeteisingiDuomenys blogasStudentas;
-            blogasStudentas.vardas = vardas;
-            blogasStudentas.pavarde = pavarde;
+            blogasStudentas.setVardas(vardas);
+            blogasStudentas.setPavarde(pavarde);
             neteisingi.push_back(blogasStudentas);
             continue;
         }

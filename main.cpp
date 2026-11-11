@@ -66,7 +66,7 @@ int main() {
                 if (!neteisingi.empty()) {
                     cout << "\n\nDel duomenu ivedimo klaidos i sarasa nebuvo ivesti sie studentai:\n";
                     for (const NeteisingiDuomenys& studentas : neteisingi) {
-                        cout << studentas.vardas << " " << studentas.pavarde << endl;
+                        cout << studentas.vardas() << " " << studentas.pavarde() << endl;
                     }
                 }
                 continue;
