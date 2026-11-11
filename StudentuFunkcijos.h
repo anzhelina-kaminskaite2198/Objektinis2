@@ -79,22 +79,21 @@ inline void NustatytiKonteineri(int& konteineris, bool tuscia) {
 }
 
 inline double Vidurkis(const Studentas& studentas) {
+    const vector<double>& nd = studentas.namuDarbai();
     double suma = 0;
-    for (int i = 0; i < studentas.namuDarbai.size(); i++) {
-        suma += studentas.namuDarbai[i];
+    for (size_t i = 0; i < nd.size(); i++) {
+        suma += nd[i];
     }
     double ndVidurkis;
-    if (studentas.namuDarbai.size() == 0) {
-        ndVidurkis = 0;
-    } else {
-        ndVidurkis = suma / studentas.namuDarbai.size();
-    }
-    double galutinis = (ndVidurkis * 0.4) + (studentas.egzaminas * 0.6);
+    if (nd.empty()) { ndVidurkis = 0;} 
+    else { ndVidurkis = suma / nd.size();}
+
+    double galutinis = (ndVidurkis * 0.4) + (studentas.egzaminas() * 0.6);
     return  round(galutinis * 100.0) / 100.0;
 }
 
 inline double Mediana(const Studentas& studentas) {
-    vector<double> ndPazymiai = studentas.namuDarbai;
+    vector<double> ndPazymiai = studentas.namuDarbai();
     sort(ndPazymiai.begin(), ndPazymiai.end());
     double mediana;
     int n = ndPazymiai.size();
@@ -105,7 +104,7 @@ inline double Mediana(const Studentas& studentas) {
     } else {
         mediana = ndPazymiai[n / 2];
     }
-    double galutinis = (mediana * 0.4) + (studentas.egzaminas * 0.6);
+    double galutinis = (mediana * 0.4) + (studentas.egzaminas() * 0.6);
     return round(galutinis * 100.0) / 100.0;
 }
 
@@ -151,7 +150,7 @@ int IvestiStudenta(Container& studentai) {
                     cout << "\033[31mKlaida: ivestas pazymys turi buti nuo 0 iki 10, bandykite dar karta.\033[0m" << endl;
                     continue;
                     }
-                    studentas.namuDarbai.push_back(pazymys);
+                    studentas.pridetiND(pazymys);
 
                 } catch (const invalid_argument& e) {
                     cout << "\033[31mKlaida: ivestas ne skaicius, bandykite dar karta.\033[0m" << endl;
@@ -180,13 +179,13 @@ int IvestiStudenta(Container& studentai) {
             
             for (int i=0; i < ndSkaicius; i++) {
                 double ndPazymys = dist(gen);
-                studentas.namuDarbai.push_back(ndPazymys);
+                studentas.pridetiND(ndPazymys);
             }
             cout << "Sugeneruoti namu darbu pazymiai: [";
 
-            for (int i = 0; i < studentas.namuDarbai.size(); i++) {
-                cout << fixed << setprecision(2) << studentas.namuDarbai[i];
-                if (i < studentas.namuDarbai.size() - 1) {
+            for (int i = 0; i < studentas.namuDarbai().size(); i++) {
+                cout << fixed << setprecision(2) << studentas.namuDarbai()[i];
+                if (i < studentas.namuDarbai().size() - 1) {
                     cout << ", ";
                 }
             }
@@ -226,7 +225,7 @@ int IvestiStudenta(Container& studentai) {
                         continue;
                     }
 
-                    studentas.egzaminas = egzoPazymys;
+                    studentas.setEgzaminas = egzoPazymys;
                     break;
                 } catch (const invalid_argument& e) {
                     cout << "\033[31mKlaida: ivestas ne skaicius. Bandykite dar karta.\033[0m" << endl;
@@ -236,14 +235,14 @@ int IvestiStudenta(Container& studentai) {
         }
         case 2: {
             double egzPazymys = dist(gen);
-            studentas.egzaminas = egzPazymys;
+            studentas.setEgzaminas = egzPazymys;
             cout << "Sugeneruotas egzamino pazymys: " << fixed << setprecision(2) << egzPazymys << endl;
             break;
         }
     }
     
-    studentas.galutinisVid = Vidurkis(studentas);
-    studentas.galutinisMed = Mediana(studentas);
+    studentas.setGalutinisVid = Vidurkis(studentas);
+    studentas.setGalutinisMed = Mediana(studentas);
     studentai.push_back(studentas);
  
     cout << "\n \033[32m Studentas sekmingai ivestas! \033[0m\n\n"
@@ -256,10 +255,10 @@ int IvestiStudenta(Container& studentai) {
          << "-----------------------------------------------------------------------" << '\n'; 
 
     cout << left 
-         << setw(15) << studentas.vardas 
-         << setw(20) << studentas.pavarde 
-         << setw(20) << studentas.galutinisVid
-         << setw(20) << studentas.galutinisMed
+         << setw(15) << studentas.vardas()
+         << setw(20) << studentas.pavarde()
+         << setw(20) << studentas.galutinisVid()
+         << setw(20) << studentas.galutinisMed()
          << setw(20) << static_cast<const void*>(&studentai.back()) << '\n';
     return 0;
 }
@@ -279,10 +278,10 @@ double IrasytiStudentus(const Container& vektorius, const string& failoVardas) {
     failas << fixed << setprecision(2);
     for (const auto& studentas : vektorius) {
         failas  << left 
-                << setw(15) << studentas.vardas 
-                << setw(20) << studentas.pavarde 
-                << setw(20) << studentas.galutinisVid
-                << setw(20) << studentas.galutinisMed << '\n';
+                << setw(15) << studentas.vardas()
+                << setw(20) << studentas.pavarde() 
+                << setw(20) << studentas.galutinisVid()
+                << setw(20) << studentas.galutinisMed() << '\n';
     }
     failas.close();
     return t.PraejesLaikas();
@@ -308,8 +307,8 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
     while (getline(failas, eilute)) {
         stringstream ss(eilute);
         Studentas studentas;
-        ss >> studentas.vardas;
-        ss >> studentas.pavarde;
+        ss >> studentas.vardas();
+        ss >> studentas.pavarde();
 
         string strPazymys;
         bool neteisingasPazymys = false;
@@ -320,7 +319,7 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
                 double pazymys = stod(strPazymys);
 
                 if ( pazymys >= 0 && pazymys <= 10) {
-                    studentas.namuDarbai.push_back(pazymys);
+                    studentas.pridetiND(pazymys);
                 } else {
                     neteisingasPazymys = true; 
                     break;
@@ -331,18 +330,18 @@ double SkaitytiIsFailo(const string& failoVardas, Container& studentai) {
                 break;
             }
         }
-        if (neteisingasPazymys||studentas.namuDarbai.empty()) {
+        if (neteisingasPazymys||studentas.namuDarbai().empty()) {
             NeteisingiDuomenys blogasStudentas;
-            blogasStudentas.vardas = studentas.vardas;
-            blogasStudentas.pavarde = studentas.pavarde;
+            blogasStudentas.vardas = studentas.vardas();
+            blogasStudentas.pavarde = studentas.pavarde();
             neteisingi.push_back(blogasStudentas);
             continue;
         }
-        studentas.egzaminas = studentas.namuDarbai.back();
+        studentas.egzaminas() = studentas.namuDarbai().back();
         studentas.namuDarbai.pop_back();
 
-        studentas.galutinisVid = Vidurkis(studentas);
-        studentas.galutinisMed = Mediana(studentas);
+        studentas.galutinisVid() = Vidurkis(studentas);
+        studentas.galutinisMed() = Mediana(studentas);
         studentai.push_back(move(studentas));
 
     }
@@ -359,7 +358,7 @@ double DalytiStudentus_S1(Container& studentai, Container& vargseliai, Container
     Laikmatis t;
  
     for (const auto& studentas : studentai) {
-        if (studentas.galutinisVid < 5.0) {
+        if (studentas.galutinisVid() < 5.0) {
             vargseliai.push_back(studentas);
         } else {
             kietuoliai.push_back(studentas);
@@ -401,7 +400,7 @@ double DalytiStudentus_Mano(Container& studentai, Container& vargseliai, Contain
     Laikmatis t;
  
     for (auto& studentas : studentai) {
-        if (studentas.galutinisVid < 5.0) {
+        if (studentas.galutinisVid() < 5.0) {
             vargseliai.push_back(move(studentas));
         } else {
             kietuoliai.push_back(move(studentas));
