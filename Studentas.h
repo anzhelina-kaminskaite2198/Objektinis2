@@ -1,5 +1,5 @@
-#ifndef STRUKTUROS_H
-#define STRUKTUROS_H
+#ifndef STUDENTAS_H
+#define STUDENTAS_H
 
 #include <string>
 #include <vector>
@@ -16,7 +16,6 @@ private:
     double galutinisMed_;
 
 public:
-    Studentas() : egzaminas_(0), galutinisVid_(0), galutinisMed_(0) {}
 
     Studentas(std::string v = "", std::string p = "", std::vector<double> nd ={}, double egz = 0)
         : vardas_(std::move(v)), pavarde_(std::move(p)),
