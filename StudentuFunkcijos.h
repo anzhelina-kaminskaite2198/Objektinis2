@@ -377,7 +377,7 @@ double DalytiStudentus_S2(Container& studentai, Container& vargseliai, Container
     if constexpr (is_same_v<Container, vector<Studentas>>) {
 
         RikiotiStudentus (studentai, [](const Studentas& a, const Studentas& b) { return a.galutinisVid > b.galutinisVid; });
-        while (!studentai.empty() && studentai.back().galutinisVid < 5.0) {
+        while (!studentai.empty() && studentai.back().galutinisVid() < 5.0) {
             vargseliai.push_back(std::move(studentai.back()));
             studentai.pop_back();
         }
@@ -421,7 +421,7 @@ double DalytiStudentus_Optimizuota( Container& studentai, Container& vargseliai,
     Laikmatis t;
 
     if constexpr (is_same_v<Container, vector<Studentas>>) {
-        auto yraVargselis = [](const Studentas& s) { return s.galutinisVid < 5.0; };
+        auto yraVargselis = [](const Studentas& s) { return s.galutinisVid() < 5.0; };
 
         copy_if(make_move_iterator(studentai.begin()), make_move_iterator(studentai.end()),
                 back_inserter(vargseliai), yraVargselis);
@@ -472,13 +472,13 @@ double RusiuotiStudentus(Container& v, int pagal) {
  
     switch (pagal) {
         case 1:
-            RikiotiStudentus (v, [](const Studentas& a, const Studentas& b) { return a.vardas < b.vardas; });
+            RikiotiStudentus (v, [](const Studentas& a, const Studentas& b) { return a.vardas() < b.vardas(); });
             break;
         case 2:
-            RikiotiStudentus (v, [](const Studentas& a, const Studentas& b) { return a.pavarde < b.pavarde; });
+            RikiotiStudentus (v, [](const Studentas& a, const Studentas& b) { return a.pavarde() < b.pavarde(); });
             break;
         case 3:
-            RikiotiStudentus (v, [](const Studentas& a, const Studentas& b) { return a.galutinisVid < b.galutinisVid; });
+            RikiotiStudentus (v, [](const Studentas& a, const Studentas& b) { return a.galutinisVid() < b.galutinisVid(); });
             break;
     }
  
