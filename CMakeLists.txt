@@ -14,7 +14,7 @@ add_executable(studentai
     TestiniaiFailai.cpp
     StudentuFunkcijos.h
     Strukturos.h
-    Studentas.h
+    Studentas.cpp
 )
  
 if(MSVC)

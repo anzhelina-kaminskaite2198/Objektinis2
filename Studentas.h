@@ -18,43 +18,26 @@ private:
 
 public:
 
-    Studentas(string v = "", string p = "", vector<double> nd ={}, double egz = 0):
-        vardas_(move(v)), pavarde_(move(p)),
-        namuDarbai_(move(nd)), egzaminas_(egz),
-        galutinisVid_(0), galutinisMed_(0) {}
+    Studentas(string v = "", string p = "", vector<double> nd ={}, double egz = 0);
 
-    ~Studentas(){ 
-        vardas_.clear();
-        pavarde_.clear();
-        namuDarbai_.clear();
-        egzaminas_ = 0;
-        galutinisVid_ = 0;
-        galutinisMed_ = 0;
+    ~Studentas();
 
-    }
+    const string& vardas() const;
+    const string& pavarde() const;
+    const vector<double>& namuDarbai() const;
+    double egzaminas() const;
+    double galutinisVid() const;
+    double galutinisMed() const;
 
-    const string& vardas() const { return vardas_; }
-    const string& pavarde() const { return pavarde_; }
-    const vector<double>& namuDarbai() const { return namuDarbai_; }
-    double egzaminas() const { return egzaminas_; }
-    double galutinisVid() const { return galutinisVid_; }
-    double galutinisMed() const { return galutinisMed_; }
+    void setVardas(const string& v);
+    void setPavarde(const string& p);
+    void setNamuDarbai(vector<double> nd);
+    void pridetiND(double nd);
+    void setEgzaminas(double e);
+    void setGalutinisVid(double g);
+    void setGalutinisMed(double g);
 
-    void setVardas(const string& v) { vardas_ = v; }
-    void setPavarde(const string& p) { pavarde_ = p; }
-    void setNamuDarbai(vector<double> nd) { namuDarbai_ = move(nd); }
-    void pridetiND(double nd) { namuDarbai_.push_back(nd); }
-    void setEgzaminas(double e) { egzaminas_ = e; }
-    void setGalutinisVid(double g) { galutinisVid_ = g; }
-    void setGalutinisMed(double g) { galutinisMed_ = g; }
-
-    friend istream& operator>>(istream& in, Studentas& a) {
-        in >> a.vardas_ >> a.pavarde_;
-        return in;
-    }
-    friend ostream& operator<<(ostream& out, const Studentas& a) {
-        out << a.vardas_ << " " << a.pavarde_;
-        return out;
-    }
+    friend istream& operator>>(istream& in, Studentas& a);
+    friend ostream& operator<<(ostream& out, const Studentas& a);
 };
 #endif
