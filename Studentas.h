@@ -19,7 +19,11 @@ private:
 public:
 
     Studentas(string v = "", string p = "", vector<double> nd ={}, double egz = 0);
-
+    Studentas(const Studentas& o);
+    Studentas(Studentas&& o) noexcept;
+    Studentas& operator=(const Studentas& o);
+    Studentas& operator=(Studentas&& o) noexcept;
+    
     ~Studentas();
 
     const string& vardas() const;

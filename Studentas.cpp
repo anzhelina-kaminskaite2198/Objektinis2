@@ -7,6 +7,40 @@ Studentas::Studentas(string v, string p, vector<double> nd, double egz):
     egzaminas_(egz),
     galutinisVid_(0), 
     galutinisMed_(0) {}
+    
+Studentas::Studentas(const Studentas& o)
+    : vardas_(o.vardas_), pavarde_(o.pavarde_), namuDarbai_(o.namuDarbai_),
+      egzaminas_(o.egzaminas_), galutinisVid_(o.galutinisVid_),
+      galutinisMed_(o.galutinisMed_) {}
+
+Studentas::Studentas(Studentas&& o) noexcept
+    : vardas_(move(o.vardas_)), pavarde_(move(o.pavarde_)),
+      namuDarbai_(move(o.namuDarbai_)), egzaminas_(o.egzaminas_),
+      galutinisVid_(o.galutinisVid_), galutinisMed_(o.galutinisMed_) {}
+
+Studentas& Studentas::operator=(const Studentas& o) {
+    if (this != &o) {
+        vardas_ = o.vardas_;
+        pavarde_ = o.pavarde_;
+        namuDarbai_ = o.namuDarbai_;
+        egzaminas_ = o.egzaminas_;
+        galutinisVid_ = o.galutinisVid_;
+        galutinisMed_ = o.galutinisMed_;
+    }
+    return *this;
+}
+
+Studentas& Studentas::operator=(Studentas&& o) noexcept {
+    if (this != &o) {
+        vardas_ = move(o.vardas_);
+        pavarde_ = move(o.pavarde_);
+        namuDarbai_ = move(o.namuDarbai_);
+        egzaminas_ = o.egzaminas_;
+        galutinisVid_ = o.galutinisVid_;
+        galutinisMed_ = o.galutinisMed_;
+    }
+    return *this;
+}
 
 Studentas::~Studentas(){ 
     vardas_.clear();
