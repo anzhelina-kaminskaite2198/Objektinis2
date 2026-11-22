@@ -78,20 +78,6 @@ inline void NustatytiKonteineri(int& konteineris, bool tuscia) {
     }
 }
 
-inline double Vidurkis(const Studentas& studentas) {
-    const vector<double>& nd = studentas.namuDarbai();
-    double suma = 0;
-    for (size_t i = 0; i < nd.size(); i++) {
-        suma += nd[i];
-    }
-    double ndVidurkis;
-    if (nd.empty()) { ndVidurkis = 0;} 
-    else { ndVidurkis = suma / nd.size();}
-
-    double galutinis = (ndVidurkis * 0.4) + (studentas.egzaminas() * 0.6);
-    return  round(galutinis * 100.0) / 100.0;
-}
-
 inline double Mediana(const Studentas& studentas) {
     vector<double> ndPazymiai = studentas.namuDarbai();
     sort(ndPazymiai.begin(), ndPazymiai.end());

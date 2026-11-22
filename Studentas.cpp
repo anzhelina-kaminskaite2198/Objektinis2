@@ -1,11 +1,12 @@
 #include "Studentas.h"
+#include <cmath>
 
 Studentas::Studentas(string v, string p, vector<double> nd, double egz):
     vardas_(move(v)), 
     pavarde_(move(p)),
     namuDarbai_(move(nd)), 
     egzaminas_(egz),
-    galutinisVid_(0), 
+    galutinisVid_(Vidurkis(*this)), 
     galutinisMed_(0) {}
     
 Studentas::Studentas(const Studentas& o)
@@ -74,4 +75,17 @@ istream& operator>>(istream& in, Studentas& a) {
 ostream& operator<<(ostream& out, const Studentas& a) {
     out << a.vardas_ << " " << a.pavarde_ << " " << a.galutinisVid_ << a.galutinisMed_ << a.egzaminas_;
     return out;
+}
+
+double Vidurkis(const Studentas& a) {
+    double suma = 0;
+    for (size_t i = 0; i < a.namuDarbai_.size(); i++) {
+        suma += a.namuDarbai_[i];
+    }
+    double ndVidurkis;
+    if (a.namuDarbai_.empty()) { ndVidurkis = 0;} 
+    else { ndVidurkis = suma / a.namuDarbai_.size();}
+
+    double galutinis = (ndVidurkis * 0.4) + (a.egzaminas_ * 0.6);
+    return  round(galutinis * 100.0) / 100.0;
 }
