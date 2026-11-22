@@ -1,5 +1,6 @@
 #include "Studentas.h"
 #include <cmath>
+#include <algorithm>
 
 Studentas::Studentas(string v, string p, vector<double> nd, double egz):
     vardas_(move(v)), 
@@ -7,7 +8,7 @@ Studentas::Studentas(string v, string p, vector<double> nd, double egz):
     namuDarbai_(move(nd)), 
     egzaminas_(egz),
     galutinisVid_(Vidurkis(*this)), 
-    galutinisMed_(0) {}
+    galutinisMed_(Mediana(*this)) {}
     
 Studentas::Studentas(const Studentas& o)
     : vardas_(o.vardas_), pavarde_(o.pavarde_), namuDarbai_(o.namuDarbai_),
@@ -88,4 +89,20 @@ double Vidurkis(const Studentas& a) {
 
     double galutinis = (ndVidurkis * 0.4) + (a.egzaminas_ * 0.6);
     return  round(galutinis * 100.0) / 100.0;
+}
+
+ double Mediana(const Studentas& a) {
+    vector <double> nd = a.namuDarbai_;
+    sort(nd.begin(), nd.end());
+    double mediana;
+    int n = nd.size();
+    if (n == 0) {
+        mediana = 0;
+    } else if (n % 2 == 0) {
+        mediana = (nd[n / 2 - 1] + nd[n / 2]) / 2.0;
+    } else {
+        mediana = nd[n / 2];
+    }
+    double galutinis = (mediana * 0.4) + (a.egzaminas_ * 0.6);
+    return round(galutinis * 100.0) / 100.0;
 }

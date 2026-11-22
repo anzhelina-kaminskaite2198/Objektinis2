@@ -8,12 +8,10 @@
 #include <iomanip>
 #include <cmath>
 #include <algorithm>
-#include <cstdlib>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <random>
-#include <limits>
 #include <stdexcept>
 #include <list>
 #include <chrono>
@@ -23,7 +21,6 @@ using namespace std;
 inline static random_device rd;
 inline static mt19937 gen(rd());
 inline static uniform_real_distribution<double>dist(0.0, 10.0);
-
 inline vector<NeteisingiDuomenys> neteisingi;
 
 inline bool IvedimoKlaidos (int kintamasis, int pasirinkimuSk) {
@@ -76,22 +73,6 @@ inline void NustatytiKonteineri(int& konteineris, bool tuscia) {
         cout << "\nNaudojamas konteineris: "
              << (konteineris == VEKTORIUS ? "std::vector" : "std::list") << endl;
     }
-}
-
-inline double Mediana(const Studentas& studentas) {
-    vector<double> ndPazymiai = studentas.namuDarbai();
-    sort(ndPazymiai.begin(), ndPazymiai.end());
-    double mediana;
-    int n = ndPazymiai.size();
-    if (n == 0) {
-        mediana = 0;
-    } else if (n % 2 == 0) {
-        mediana = (ndPazymiai[n / 2 - 1] + ndPazymiai[n / 2]) / 2.0;
-    } else {
-        mediana = ndPazymiai[n / 2];
-    }
-    double galutinis = (mediana * 0.4) + (studentas.egzaminas() * 0.6);
-    return round(galutinis * 100.0) / 100.0;
 }
 
 template <typename Container>

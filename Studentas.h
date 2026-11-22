@@ -44,5 +44,6 @@ public:
     friend istream& operator>>(istream& in, Studentas& a);
     friend ostream& operator<<(ostream& out, const Studentas& a);
     friend double Vidurkis(const Studentas& a);
+    friend double Mediana(const Studentas& a);
 };
 #endif
