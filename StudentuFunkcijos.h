@@ -219,13 +219,9 @@ int IvestiStudenta(Container& studentai) {
          << setw(20) << "Galutinis (vid.)"
          << setw(20) << "Galutinis (med.)" 
          << setw(20) << "Adresas" << '\n'
-         << "-----------------------------------------------------------------------" << '\n'; 
+         << "--------------------------------------------------------------------------------------" << '\n'; 
 
-    cout << left 
-         << setw(15) << studentas.vardas()
-         << setw(20) << studentas.pavarde()
-         << setw(20) << studentas.galutinisVid()
-         << setw(20) << studentas.galutinisMed()
+    cout << studentas
          << setw(20) << static_cast<const void*>(&studentai.back()) << '\n';
     return 0;
 }

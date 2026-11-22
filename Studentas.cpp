@@ -1,6 +1,7 @@
 #include "Studentas.h"
 #include <cmath>
 #include <algorithm>
+#include <iomanip>
 
 Studentas::Studentas(string v, string p, vector<double> nd, double egz):
     vardas_(move(v)), 
@@ -80,7 +81,11 @@ istream& operator>>(istream& in, Studentas& a) {
     return in;
 }
 ostream& operator<<(ostream& out, const Studentas& a) {
-    out << a.vardas_ << " " << a.pavarde_ << " " << a.galutinisVid_ << a.galutinisMed_ << a.egzaminas_;
+    out << left 
+        << setw(15) << a.vardas_ 
+        << setw(20) << a.pavarde_ 
+        << setw(20) << a.galutinisVid_ 
+        << setw(20) << a.galutinisMed_ ;
     return out;
 }
 
