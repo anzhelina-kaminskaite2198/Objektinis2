@@ -10,15 +10,21 @@ Studentas::Studentas(string v, string p, vector<double> nd, double egz):
     galutinisVid_(Vidurkis(*this)), 
     galutinisMed_(Mediana(*this)) {}
     
-Studentas::Studentas(const Studentas& o)
-    : vardas_(o.vardas_), pavarde_(o.pavarde_), namuDarbai_(o.namuDarbai_),
-      egzaminas_(o.egzaminas_), galutinisVid_(o.galutinisVid_),
-      galutinisMed_(o.galutinisMed_) {}
+Studentas::Studentas(const Studentas& o):
+    vardas_(o.vardas_), 
+    pavarde_(o.pavarde_),
+    namuDarbai_(o.namuDarbai_),
+    egzaminas_(o.egzaminas_),
+    galutinisVid_(o.galutinisVid_),
+    galutinisMed_(o.galutinisMed_) {}
 
-Studentas::Studentas(Studentas&& o) noexcept
-    : vardas_(move(o.vardas_)), pavarde_(move(o.pavarde_)),
-      namuDarbai_(move(o.namuDarbai_)), egzaminas_(o.egzaminas_),
-      galutinisVid_(o.galutinisVid_), galutinisMed_(o.galutinisMed_) {}
+Studentas::Studentas(Studentas&& o) noexcept: 
+    vardas_(move(o.vardas_)), 
+    pavarde_(move(o.pavarde_)),
+    namuDarbai_(move(o.namuDarbai_)), 
+    egzaminas_(o.egzaminas_),
+    galutinisVid_(o.galutinisVid_), 
+    galutinisMed_(o.galutinisMed_) {}
 
 Studentas& Studentas::operator=(const Studentas& o) {
     if (this != &o) {
