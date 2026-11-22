@@ -72,6 +72,6 @@ istream& operator>>(istream& in, Studentas& a) {
     return in;
 }
 ostream& operator<<(ostream& out, const Studentas& a) {
-    out << a.vardas_ << " " << a.pavarde_;
+    out << a.vardas_ << " " << a.pavarde_ << " " << a.galutinisVid_ << a.galutinisMed_ << a.egzaminas_;
     return out;
 }
