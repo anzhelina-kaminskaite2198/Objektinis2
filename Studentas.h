@@ -28,10 +28,8 @@ public:
     virtual void spausdinti() const = 0;
 };
 
-class Studentas {
+class Studentas: public Zmogus{
 private:
-    string vardas_;
-    string pavarde_;
     vector<double> namuDarbai_;
     double egzaminas_;
     double galutinisVid_;
@@ -47,17 +45,13 @@ public:
     Studentas& operator=(const Studentas& o);
     Studentas& operator=(Studentas&& o) noexcept;
     
-    ~Studentas();
+    ~Studentas() override;
 
-    const string& vardas() const;
-    const string& pavarde() const;
     const vector<double>& namuDarbai() const;
     double egzaminas() const;
     double galutinisVid() const;
     double galutinisMed() const;
 
-    void setVardas(const string& v);
-    void setPavarde(const string& p);
     void setNamuDarbai(vector<double> nd);
     void pridetiND(double nd);
     void setEgzaminas(double e);
@@ -68,5 +62,7 @@ public:
     friend ostream& operator<<(ostream& out, const Studentas& a);
     friend double Vidurkis(const Studentas& a);
     friend double Mediana(const Studentas& a);
+
+    void spausdinti() const override;
 };
 #endif

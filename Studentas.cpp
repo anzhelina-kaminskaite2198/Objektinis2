@@ -43,24 +43,21 @@ void Zmogus::setVardas(const string& v) {vardas_ = v;}
 void Zmogus::setPavarde(const string& p) {pavarde_ = p;}
 
 Studentas::Studentas(string v, string p, vector<double> nd, double egz):
-    vardas_(move(v)), 
-    pavarde_(move(p)),
+    Zmogus(move(v), move(p)),
     namuDarbai_(move(nd)), 
     egzaminas_(egz),
     galutinisVid_(Vidurkis(*this)), 
     galutinisMed_(Mediana(*this)) {}
     
 Studentas::Studentas(const Studentas& o):
-    vardas_(o.vardas_), 
-    pavarde_(o.pavarde_),
+    Zmogus(o),
     namuDarbai_(o.namuDarbai_),
     egzaminas_(o.egzaminas_),
     galutinisVid_(o.galutinisVid_),
     galutinisMed_(o.galutinisMed_) {}
 
 Studentas::Studentas(Studentas&& o) noexcept: 
-    vardas_(move(o.vardas_)), 
-    pavarde_(move(o.pavarde_)),
+    Zmogus(move(o)), 
     namuDarbai_(move(o.namuDarbai_)), 
     egzaminas_(o.egzaminas_),
     galutinisVid_(o.galutinisVid_), 
@@ -68,8 +65,7 @@ Studentas::Studentas(Studentas&& o) noexcept:
 
 Studentas& Studentas::operator=(const Studentas& o) {
     if (this != &o) {
-        vardas_ = o.vardas_;
-        pavarde_ = o.pavarde_;
+        Zmogus::operator=(o);
         namuDarbai_ = o.namuDarbai_;
         egzaminas_ = o.egzaminas_;
         galutinisVid_ = o.galutinisVid_;
@@ -80,8 +76,7 @@ Studentas& Studentas::operator=(const Studentas& o) {
 
 Studentas& Studentas::operator=(Studentas&& o) noexcept {
     if (this != &o) {
-        vardas_ = move(o.vardas_);
-        pavarde_ = move(o.pavarde_);
+        Zmogus::operator=(move(o));
         namuDarbai_ = move(o.namuDarbai_);
         egzaminas_ = o.egzaminas_;
         galutinisVid_ = o.galutinisVid_;
@@ -91,8 +86,6 @@ Studentas& Studentas::operator=(Studentas&& o) noexcept {
 }
 
 Studentas::~Studentas(){ 
-    vardas_.clear();
-    pavarde_.clear();
     namuDarbai_.clear();
     egzaminas_ = 0;
     galutinisVid_ = 0;
@@ -103,6 +96,10 @@ Studentas::~Studentas(){
 void Studentas::perskaiciuoti() {
     galutinisVid_ = Vidurkis(*this);
     galutinisMed_ = Mediana(*this);
+}
+
+void Studentas::spausdinti() const {
+    cout << *this;
 }
 
 const string& Studentas::vardas() const { return vardas_; }
