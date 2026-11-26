@@ -10,6 +10,9 @@ galutinį balą dviem būdais – pagal namų darbų **vidurkį** ir pagal jų *
 - **v1.1** – struktūra `Studentas` pakeista **klase** (`Studentas.h` / `Studentas.cpp`): privatūs laukai, konstruktoriai, destruktorius, getteriai / setteriai; atliktas `struct` ir `class` versijų spartos palyginimas ir optimizavimo flag'ų tyrimas.
 - **v1.2** – **penkių metodų taisyklė** (Rule of Five) su demonstracija meniu, **perdengti `>>` ir `<<` operatoriai**
 darbui su `Studentas`, galutiniai balai skaičiuojami automatiškai pačioje klasėje.
+- **v1.5** – vietoje vienos klasės sukurtos dvi: **abstrakti bazinė klasė `Zmogus`** ir iš jos išvestinė klasė `Studentas`.
+  Abstrakčios klasės objekto sukurti negalima; `Studentas` palaiko v1.2 realizuotą trejų (penkių) metodų taisyklę, o programos
+  veikimo logika išlieka tokia pati kaip v1.2.
 
 
 Galutinio balo formulės:
@@ -25,10 +28,13 @@ Galutinis balas suapvalinamas iki dviejų skaitmenų po kablelio.
 
 ## Turinys
 
+- [Kas naujo v1.5](#kas-naujo-v15)
 - [Kas naujo v1.2](#kas-naujo-v12)
 - [Diegimas ir paleidimas](#diegimas-ir-paleidimas)
 - [Projekto failai](#projekto-failai)
-- [Klasė Studentas](#klasė-studentas)
+- [Klasių hierarchija: Zmogus ir Studentas (v1.5)](#klasių-hierarchija-zmogus-ir-studentas-v15)
+  - [Abstrakti klasė Zmogus](#abstrakti-klasė-zmogus)
+  - [Išvestinė klasė Studentas](#išvestinė-klasė-studentas)
 - [Penkių metodų taisyklė (Rule of Five)](#penkių-metodų-taisyklė-rule-of-five)
   - [Metodų aprašymas](#metodų-aprašymas)
   - [Demonstracija (meniu punktas 6)](#demonstracija-meniu-punktas-6)
@@ -46,6 +52,20 @@ Galutinis balas suapvalinamas iki dviejų skaitmenų po kablelio.
   - [Išvados](#išvados)
 - [Versijos (releases)](#versijos-releases)
 
+
+---
+ 
+## Kas naujo v1.5
+ 
+| Pakeitimas | Aprašymas |
+|---|---|
+| Bazinė klasė `Zmogus` | Nauja klasė, kuri aprašo bendrus žmogaus duomenis (`vardas_`, `pavarde_`) ir jų getterius / setterius. Klasė **abstrakti**, nes turi gryną virtualią funkciją `virtual void spausdinti() const = 0;` – `Zmogus` tipo objekto sukurti negalima. |
+| Išvestinė klasė `Studentas` | `class Studentas : public Zmogus` paveldi vardą ir pavardę, o pati saugo tik su mokymusi susijusius duomenis (namų darbus, egzaminą, galutinius balus). Funkciją `spausdinti()` perdengia (`override`). |
+| Virtualus destruktorius | `Zmogus` destruktorius yra `virtual`, todėl objektas, sunaikinamas per rodyklę į `Zmogus`, sunaikinamas teisingai. |
+| Penkių metodų taisyklė | Kiekviena klasė turi savo konstruktorių, kopijavimo ir perkėlimo konstruktorius, kopijavimo ir perkėlimo priskyrimo operatorius bei destruktorių. `Studentas` bazinę dalį perduoda `Zmogus` metodams. |
+| Veikimo logika | Meniu, įvestis, išvestis, dalijimo strategijos ir failai nepasikeitė – programa veikia kaip v1.2. |
+ 
+![Pagrindinis meniu](nuotraukos/meniu.png)
 
 ---
 
@@ -120,8 +140,8 @@ g++ -std=c++17 -O2 main.cpp TestiniaiFailai.cpp Studentas.cpp -o studentai
 | Failas | Kas jame yra |
 |---|---|
 | `CMakeLists.txt` | Projekto surinkimo aprašas (C++17, Release pagal nutylėjimą) |
-| `Studentas.h` | Klasės `Studentas` deklaracija (privatūs laukai, penkių metodų taisyklės metodai, getteriai / setteriai, draugiškos funkcijos ir operatoriai) |
-| `Studentas.cpp` | Klasės `Studentas` realizacija: konstruktoriai, priskyrimo operatoriai, destruktorius, `perskaiciuoti()`, `>>` / `<<` operatoriai, `Vidurkis()` ir `Mediana()` |
+| `Studentas.h` | Abstrakčios bazinės klasės `Zmogus` ir išvestinės klasės `Studentas` deklaracijos (laukai, penkių metodų taisyklės metodai, getteriai / setteriai, draugiškos funkcijos ir operatoriai) |
+| `Studentas.cpp` | Abiejų klasių realizacija: `Zmogus` metodai, `Studentas` konstruktoriai, priskyrimo operatoriai, destruktorius, `perskaiciuoti()`, `spausdinti()`, `>>` / `<<` operatoriai, `Vidurkis()` ir `Mediana()` |
 | `Strukturos.h` | Klasė `NeteisingiDuomenys` ir laiko matavimo struktūra `Laikmatis` |
 | `StudentuFunkcijos.h` | Studentų funkcijos: įvedimas, skaitymas iš failo, dalijimo strategijos, rūšiavimas, įrašymas, testų paleidimas ir `RuleOfFive()` demonstracija (daugelis – šablonai) |
 | `TestiniaiFailai.cpp` | Atsitiktinių testinių failų kūrimas |
@@ -129,56 +149,118 @@ g++ -std=c++17 -O2 main.cpp TestiniaiFailai.cpp Studentas.cpp -o studentai
 
 ---
 
-## Klasė Studentas (v1.1)
-
-Ankstesnėse versijose `Studentas` buvo `struct` su vieša prieiga prie visų laukų. Versijoje v1.1 tai yra klasė:
-laukai paslėpti (`private`), o prieiga – per viešą interfeisą.
-
+## Klasių hierarchija: Zmogus ir Studentas (v1.5)
+ 
+Ankstesnėse versijose vienoje klasėje buvo ir bendri žmogaus duomenys (vardas, pavardė), ir studento duomenys (pažymiai).
+Versijoje v1.5 jie atskirti: bendra dalis perkelta į bazinę klasę, o studentui specifinė – paliko išvestinėje klasėje.
+ 
+```
+   Zmogus            (abstrakti klasė, objektų kurti negalima)
+      ▲
+      │  public paveldėjimas
+   Studentas         (konkreti klasė, objektus kurti galima)
+```
+ 
+| | `Zmogus` (bazinė, abstrakti) | `Studentas` (išvestinė) |
+|---|---|---|
+| Laukai | `vardas_`, `pavarde_` (`protected`) | `namuDarbai_`, `egzaminas_`, `galutinisVid_`, `galutinisMed_` (`private`) |
+| Konstruktoriai ir priskyrimas | konstruktorius, kopijavimo ir perkėlimo konstruktoriai, kopijavimo ir perkėlimo priskyrimas | tas pats, bet bazinę dalį perduoda `Zmogus` metodams |
+| Destruktorius | `virtual ~Zmogus()` | `~Studentas() override` |
+| Getteriai / setteriai | `vardas()`, `pavarde()`, `setVardas()`, `setPavarde()` | `namuDarbai()`, `egzaminas()`, `galutinisVid()`, `galutinisMed()`, `setNamuDarbai()`, `pridetiND()`, `setEgzaminas()`, `setGalutinisVid()`, `setGalutinisMed()` |
+| `spausdinti()` | `virtual void spausdinti() const = 0;` (gryna virtuali) | `void spausdinti() const override;` |
+| Draugiškos funkcijos | – | `operator>>`, `operator<<`, `Vidurkis()`, `Mediana()` |
+ 
+Vardas, pavardė ir jų getteriai / setteriai nėra deklaruoti `Studentas` klasėje – jie **paveldimi**, todėl
+`studentas.vardas()` ar `studentas.setPavarde(...)` veikia taip pat kaip v1.2.
+ 
+### Abstrakti klasė Zmogus
+ 
 ```cpp
-class Studentas {
-private:
+class Zmogus {
+protected:
     string vardas_;
     string pavarde_;
+public:
+    Zmogus(string v = "", string p = "");
+    Zmogus(const Zmogus& o);
+    Zmogus(Zmogus&& o) noexcept;
+    Zmogus& operator=(const Zmogus& o);
+    Zmogus& operator=(Zmogus&& o) noexcept;
+ 
+    virtual ~Zmogus();
+ 
+    const string& vardas() const;
+    const string& pavarde() const;
+    void setVardas(const string& v);
+    void setPavarde(const string& p);
+ 
+    virtual void spausdinti() const = 0;     // gryna virtuali funkcija
+};
+```
+ 
+- **Kodėl klasė abstrakti.** Joje yra gryna virtuali funkcija `spausdinti() = 0`, kuri neturi realizacijos. Tokią klasę
+  kompiliatorius leidžia naudoti tik kaip bazinę – objektų kurti negalima, o kiekviena išvestinė klasė privalo funkciją realizuoti,
+  kad pati nebūtų abstrakti. `Studentas` tai daro: `spausdinti()` išveda studentą per perdengtą `operator<<`.
+- **`protected` laukai.** `vardas_` ir `pavarde_` prieinami išvestinei klasei (pvz. `operator>>` ir `operator<<`, kurie yra
+  `Studentas` draugai, juos skaito ir rašo), bet ne išorinėms funkcijoms.
+- **Virtualus destruktorius.** Jei objektas, sukurtas kaip `Studentas`, būtų naikinamas per `Zmogus*`, be `virtual` būtų iškviestas tik
+  bazinės klasės destruktorius ir `Studentas` dalis nebūtų sutvarkyta.
+**Abstrakčios klasės demonstracija.** `main.cpp` pradžioje yra užkomentuota eilutė:
+ 
+```cpp
+int main() {
+    //Zmogus zmogus;      // <-- atkomentavus programa nebesikompiliuoja
+```
+ 
+Atkomentavus ją kompiliatorius nutraukia kompiliavimą ir praneša, kad `Zmogus` yra abstraktus tipas
+(g++ tekstas: `cannot declare variable 'zmogus' to be of abstract type 'Zmogus'`, o po juo – `virtual void Zmogus::spausdinti() const` yra gryna virtuali funkcija):
+ 
+![Bandymas sukurti Zmogus objektą – kompiliavimo klaida](nuotraukos/zmogus-abstrakti-klaida.png)
+ 
+Nuotraukoje matoma, kad tiesiogiai sukurti `Zmogus` objekto negalima. Po patikrinimo eilutė vėl užkomentuota, kad programa kompiliuotųsi.
+ 
+### Išvestinė klasė Studentas
+ 
+```cpp
+class Studentas : public Zmogus {
+private:
     vector<double> namuDarbai_;
     double egzaminas_;
     double galutinisVid_;
     double galutinisMed_;
     void perskaiciuoti();                                //perskaičiuoja galutinius balus
-
+ 
 public:
     Studentas(string v = "", string p = "", vector<double> nd = {}, double egz = 0);
     Studentas(const Studentas& o);                       // kopijavimo konstruktorius
     Studentas(Studentas&& o) noexcept;                   // perkėlimo konstruktorius
     Studentas& operator=(const Studentas& o);            // kopijavimo priskyrimas
     Studentas& operator=(Studentas&& o) noexcept;        // perkėlimo priskyrimas
-    ~Studentas();                                        // destruktorius
-
-    // getteriai (const) ir setteriai
-    const string& vardas() const;   const string& pavarde() const;
+    ~Studentas() override;                               // destruktorius
+ 
     const vector<double>& namuDarbai() const;
     double egzaminas() const;  double galutinisVid() const;  double galutinisMed() const;
-    void setVardas(const string&);  void setPavarde(const string&);
     void setNamuDarbai(vector<double>);  void pridetiND(double);
     void setEgzaminas(double);  void setGalutinisVid(double);  void setGalutinisMed(double);
-
+ 
     friend istream& operator>>(istream&, Studentas&);
-    friend ostream& operator<<(ostream&, const Studentas&);   
+    friend ostream& operator<<(ostream&, const Studentas&);
     friend double Vidurkis(const Studentas&);
     friend double Mediana(const Studentas&);
-
+ 
+    void spausdinti() const override;
 };
 ```
-
-- **Konstruktorius** su numatytosiomis reikšmėmis kartu veikia ir kaip numatytasis (`Studentas s;`).
-  Sukūrus objektą galutiniai balai (`galutinisVid_`, `galutinisMed_`) apskaičiuojami iš karto.
+ 
+- **Konstruktorius** su numatytosiomis reikšmėmis kartu veikia ir kaip numatytasis (`Studentas s;`). Vardą ir pavardę perduoda
+  `Zmogus(move(v), move(p))`, o galutiniai balai (`galutinisVid_`, `galutinisMed_`) apskaičiuojami iš karto.
 - **Automatinis perskaičiavimas.** `setNamuDarbai()`, `pridetiND()` ir `setEgzaminas()` po pakeitimo kviečia privatų
   `perskaiciuoti()`, todėl galutiniai balai niekada nelieka pasenę. `setGalutinisVid()` ir `setGalutinisMed()` reikšmę nustato tiesiogiai.
-- **Getteriai** grąžina `const&`, todėl objektų nereikia kopijuoti.
+- **`override`.** `~Studentas() override` ir `spausdinti() const override` – kompiliatorius patikrina, kad jie tikrai perdengia
+  bazinės klasės virtualias funkcijas.
 - **`Vidurkis()` ir `Mediana()`** – draugiškos funkcijos, kurios tiesiogiai skaito privačius laukus. Jei namų darbų nėra, jų
   vidurkis / mediana laikoma 0; rezultatas suapvalinamas iki 2 skaitmenų po kablelio.
-- Klasė `NeteisingiDuomenys` (blogi įrašai skaitant iš failo) taip pat yra klasė su getteriais ir setteriais.
-
-
+- Klasė `NeteisingiDuomenys` (blogi įrašai skaitant iš failo) yra atskira klasė su getteriais ir setteriais.
 ---
 
 ## Penkių metodų taisyklė (Rule of Five)
@@ -573,5 +655,15 @@ atsitiktinis generavimas (`rand()`), galutinis balas pagal vidurkį ir medianą,
 - Galutiniai balai skaičiuojami automatiškai (`perskaiciuoti()` konstruktoriuje ir setteriuose); `Vidurkis()` ir `Mediana()` – draugiškos funkcijos.
 - Meniu papildytas punktu „Konstruktorių demonstracija“, išėjimas perkeltas į punktą 7.
 - README papildytas perdengtų metodų, duomenų įvesties ir išvesties aprašymais bei iliustracijomis.
+**Apribojimai:** po dalijimo pradinis konteineris išvalomas; `RikiotiStudentus` palaiko tik `vector<Studentas>` ir `list<Studentas>`;
+10 mln. įrašų testui reikia kelių GB RAM (ypač S1).
+
+### v1.5
+ 
+- Sukurta **abstrakti bazinė klasė `Zmogus`** (`vardas_`, `pavarde_`, getteriai / setteriai, `virtual ~Zmogus()`, gryna virtuali funkcija `spausdinti() = 0`).
+- `Studentas` pakeista **išvestine klase** `class Studentas : public Zmogus`; vardo ir pavardės laukai bei jų metodai paveldimi, `spausdinti()` ir destruktorius perdengti (`override`).
+- Abi klasės turi konstruktorių, kopijavimo ir perkėlimo konstruktorius, kopijavimo ir perkėlimo priskyrimo operatorius bei destruktorių; `Studentas` bazinę dalį perduoda `Zmogus` metodams.
+- Parodyta, kad `Zmogus` objekto sukurti negalima (kompiliavimo klaida, žr. [Abstrakti klasė Zmogus](#abstrakti-klasė-zmogus)).
+- Programos veikimo logika (meniu, įvestis, išvestis, strategijos) nepakito.
 **Apribojimai:** po dalijimo pradinis konteineris išvalomas; `RikiotiStudentus` palaiko tik `vector<Studentas>` ir `list<Studentas>`;
 10 mln. įrašų testui reikia kelių GB RAM (ypač S1).
