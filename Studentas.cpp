@@ -2,6 +2,45 @@
 #include <cmath>
 #include <algorithm>
 #include <iomanip>
+#include <utility>
+
+Zmogus::Zmogus(string v, string p):
+     vardas_(move(v)),
+     pavarde_(move(p)) {}
+
+Zmogus::Zmogus(const Zmogus& o):
+     vardas_(o.vardas_),
+     pavarde_(o.pavarde_) {}
+
+Zmogus::Zmogus(Zmogus&& o) noexcept:
+     vardas_(move(o.vardas_)),
+     pavarde_(move(o.pavarde_)) {}
+
+Zmogus& Zmogus::operator=(const Zmogus& o) {
+    if (this != &o) {
+        vardas_ = o.vardas_;
+        pavarde_ = o.pavarde_;
+    }
+    return *this;
+}
+
+Zmogus& Zmogus::operator=(Zmogus&& o) noexcept {
+    if (this != &o) {
+        vardas_ = move(o.vardas_);
+        pavarde_ = move(o.pavarde_);
+    }
+    return *this;
+}
+
+Zmogus::~Zmogus() {
+    vardas_.clear();
+    pavarde_.clear();
+};
+
+const string& Zmogus::vardas() const {return vardas_;}
+const string& Zmogus::pavarde() const {return pavarde_;}
+void Zmogus::setVardas(const string& v) {vardas_ = v;}
+void Zmogus::setPavarde(const string& p) {pavarde_ = p;}
 
 Studentas::Studentas(string v, string p, vector<double> nd, double egz):
     vardas_(move(v)), 
