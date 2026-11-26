@@ -7,8 +7,10 @@ galutinį balą dviem būdais – pagal namų darbų **vidurkį** ir pagal jų *
 - **v0.2** – studentų skirstymas į dvi grupes, rūšiavimas, rašymas į failus, laiko matavimas.
 - **v0.3** – visos funkcijos veikia ir su `std::vector`, ir su `std::list`; konteinerių palyginimas.
 - **v1.0** – trys studentų dalijimo strategijos (+ papildoma „Mano“), efektyvūs STL algoritmai, `CMakeLists.txt`.
-- **v1.1** – struktūra `Studentas` pakeista **klase** (`Studentas.h` / `Studentas.cpp`): privatūs laukai, konstruktoriai,
-  destruktorius, getteriai / setteriai; atliktas `struct` ir `class` versijų spartos palyginimas ir optimizavimo flag'ų tyrimas.
+- **v1.1** – struktūra `Studentas` pakeista **klase** (`Studentas.h` / `Studentas.cpp`): privatūs laukai, konstruktoriai, destruktorius, getteriai / setteriai; atliktas `struct` ir `class` versijų spartos palyginimas ir optimizavimo flag'ų tyrimas.
+- **v1.2** – **penkių metodų taisyklė** (Rule of Five) su demonstracija meniu, **perdengti `>>` ir `<<` operatoriai**
+darbui su `Studentas`, galutiniai balai skaičiuojami automatiškai pačioje klasėje.
+
 
 Galutinio balo formulės:
 
@@ -23,9 +25,16 @@ Galutinis balas suapvalinamas iki dviejų skaitmenų po kablelio.
 
 ## Turinys
 
+- [Kas naujo v1.2](#kas-naujo-v12)
 - [Diegimas ir paleidimas](#diegimas-ir-paleidimas)
 - [Projekto failai](#projekto-failai)
-- [Klasė Studentas (v1.1)](#klasė-studentas-v11)
+- [Klasė Studentas](#klasė-studentas)
+- [Penkių metodų taisyklė (Rule of Five)](#penkių-metodų-taisyklė-rule-of-five)
+  - [Metodų aprašymas](#metodų-aprašymas)
+  - [Demonstracija (meniu punktas 6)](#demonstracija-meniu-punktas-6)
+- [Perdengti įvesties ir išvesties operatoriai](#perdengti-įvesties-ir-išvesties-operatoriai)
+  - [Duomenų įvestis](#duomenų-įvestis)
+  - [Duomenų išvestis](#duomenų-išvestis)
 - [Naudojimo instrukcija](#naudojimo-instrukcija)
 - [Duomenų failo formatas](#duomenų-failo-formatas)
 - [Dalijimo strategijos](#dalijimo-strategijos)
@@ -37,7 +46,22 @@ Galutinis balas suapvalinamas iki dviejų skaitmenų po kablelio.
   - [Išvados](#išvados)
 - [Versijos (releases)](#versijos-releases)
 
+
 ---
+
+## Kas naujo v1.2
+ 
+| Pakeitimas | Aprašymas |
+|---|---|
+| Penkių metodų taisyklė | Klasėje `Studentas` realizuoti ir **demonstruojami** visi metodai: konstruktorius, kopijavimo konstruktorius, perkėlimo konstruktorius, kopijavimo priskyrimo operatorius, perkėlimo priskyrimo operatorius ir destruktorius. Demonstracija – meniu punktas **6**. |
+| Perdengti `>>` ir `<<` | `operator>>` nuskaito studento vardą ir pavardę iš srauto, `operator<<` išveda studento eilutę (vardas, pavardė, galutinis pagal vidurkį ir pagal medianą). Naudojami įvedant studentą ir demonstracijoje. |
+| Automatinis balų skaičiavimas | Galutiniai balai perskaičiuojami pačioje klasėje: konstruktoriuje ir kiekvieną kartą, kai pasikeičia namų darbai ar egzaminas (privatus metodas `perskaiciuoti()`). Skaičiavimas atliekamas draugiškomis funkcijomis `Vidurkis()` ir `Mediana()`. |
+| Meniu | Pridėtas naujas Konstruktorių demonstracijos punktas, „Išeiti“ tapo punktu 7. |
+ 
+![Pagrindinis meniu](nuotraukos/meniu.png)
+ 
+---
+
 
 ## Diegimas ir paleidimas
 
@@ -96,10 +120,10 @@ g++ -std=c++17 -O2 main.cpp TestiniaiFailai.cpp Studentas.cpp -o studentai
 | Failas | Kas jame yra |
 |---|---|
 | `CMakeLists.txt` | Projekto surinkimo aprašas (C++17, Release pagal nutylėjimą) |
-| `Studentas.h` | Klasės `Studentas` deklaracija (privatūs laukai, viešas interfeisas) |
-| `Studentas.cpp` | Klasės `Studentas` metodų, konstruktorių, destruktoriaus ir `>>` / `<<` operatorių realizacija |
+| `Studentas.h` | Klasės `Studentas` deklaracija (privatūs laukai, penkių metodų taisyklės metodai, getteriai / setteriai, draugiškos funkcijos ir operatoriai) |
+| `Studentas.cpp` | Klasės `Studentas` realizacija: konstruktoriai, priskyrimo operatoriai, destruktorius, `perskaiciuoti()`, `>>` / `<<` operatoriai, `Vidurkis()` ir `Mediana()` |
 | `Strukturos.h` | Klasė `NeteisingiDuomenys` ir laiko matavimo struktūra `Laikmatis` |
-| `StudentuFunkcijos.h` | Visos studentų funkcijos: įvedimas, skaičiavimas, skaitymas iš failo, dalijimo strategijos, rūšiavimas, įrašymas, testų paleidimas (daugelis – šablonai) |
+| `StudentuFunkcijos.h` | Studentų funkcijos: įvedimas, skaitymas iš failo, dalijimo strategijos, rūšiavimas, įrašymas, testų paleidimas ir `RuleOfFive()` demonstracija (daugelis – šablonai) |
 | `TestiniaiFailai.cpp` | Atsitiktinių testinių failų kūrimas |
 | `main.cpp` | Meniu ir programos eiga |
 
@@ -119,6 +143,7 @@ private:
     double egzaminas_;
     double galutinisVid_;
     double galutinisMed_;
+    void perskaiciuoti();                                //perskaičiuoja galutinius balus
 
 public:
     Studentas(string v = "", string p = "", vector<double> nd = {}, double egz = 0);
@@ -137,19 +162,112 @@ public:
     void setEgzaminas(double);  void setGalutinisVid(double);  void setGalutinisMed(double);
 
     friend istream& operator>>(istream&, Studentas&);
-    friend ostream& operator<<(ostream&, const Studentas&);
+    friend ostream& operator<<(ostream&, const Studentas&);   
+    friend double Vidurkis(const Studentas&);
+    friend double Mediana(const Studentas&);
+
 };
 ```
 
 - **Konstruktorius** su numatytosiomis reikšmėmis kartu veikia ir kaip numatytasis (`Studentas s;`).
-- **Perkėlimo konstruktorius ir priskyrimas** yra būtini efektyviam dalijimui: strategijos `S2`, `Mano` ir `Optimizuota`
-  perkelia studentus tarp konteinerių per `std::move`. Be jų (kai deklaruotas destruktorius) kompiliatorius perkėlimo
-  operacijų nesugeneruoja ir studentai būtų kopijuojami. Jos pažymėtos `noexcept`, kad `std::vector` plečiantis perkeltų, o ne kopijuotų elementus.
+  Sukūrus objektą galutiniai balai (`galutinisVid_`, `galutinisMed_`) apskaičiuojami iš karto.
+- **Automatinis perskaičiavimas.** `setNamuDarbai()`, `pridetiND()` ir `setEgzaminas()` po pakeitimo kviečia privatų
+  `perskaiciuoti()`, todėl galutiniai balai niekada nelieka pasenę. `setGalutinisVid()` ir `setGalutinisMed()` reikšmę nustato tiesiogiai.
 - **Getteriai** grąžina `const&`, todėl objektų nereikia kopijuoti.
-- Klasė `NeteisingiDuomenys` (blogi įrašai skaitant iš failo) taip pat paversta klase su getteriais ir setteriais.
+- **`Vidurkis()` ir `Mediana()`** – draugiškos funkcijos, kurios tiesiogiai skaito privačius laukus. Jei namų darbų nėra, jų
+  vidurkis / mediana laikoma 0; rezultatas suapvalinamas iki 2 skaitmenų po kablelio.
+- Klasė `NeteisingiDuomenys` (blogi įrašai skaitant iš failo) taip pat yra klasė su getteriais ir setteriais.
+
 
 ---
 
+## Penkių metodų taisyklė (Rule of Five)
+ 
+Klasė valdo dinaminę atmintį per `string` ir `vector`, todėl realizuota ne tik trijų metodų taisyklė
+(destruktorius, kopijavimo konstruktorius, kopijavimo priskyrimas), bet ir jos išplėtimas – **penkių metodų taisyklė**,
+pridedanti perkėlimo konstruktorių ir perkėlimo priskyrimą. Kartu su paprastu konstruktoriumi viso demonstruojama šešių metodų.
+
+### Metodų aprašymas
+ 
+| # | Metodas | Deklaracija | Ką daro | Kur naudojamas programoje |
+|---|---|---|---|---|
+| 1 | Konstruktorius | `Studentas(string v = "", string p = "", vector<double> nd = {}, double egz = 0)` | Sukuria studentą: `move` perima vardą, pavardę ir namų darbus, nustato egzaminą, apskaičiuoja abu galutinius balus | `Studentas studentas;` (`IvestiStudenta`), `Studentas(move(vardas), move(pavarde), move(nd), egz)` (`SkaitytiIsFailo`) |
+| 2 | Kopijavimo konstruktorius | `Studentas(const Studentas& o)` | Sukuria **nepriklausomą kopiją**: nukopijuoja visus laukus, įskaitant jau apskaičiuotus galutinius balus | `studentai.push_back(studentas)` (`IvestiStudenta`), strategija S1 (`vargseliai.push_back(studentas)`) |
+| 3 | Perkėlimo konstruktorius | `Studentas(Studentas&& o) noexcept` | Perima iš `o` vardą, pavardę ir namų darbų vektorių (`move`, be kopijavimo); `double` reikšmės nukopijuojamos. Šaltinio `string` ir `vector` lieka tušti | `push_back(move(studentas))` (`SkaitytiIsFailo`), strategijos S2, Mano, Optimizuota; `vector` plečiantis |
+| 4 | Kopijavimo priskyrimo operatorius | `Studentas& operator=(const Studentas& o)` | Nukopijuoja visus laukus į jau egzistuojantį objektą; patikrina, ar nepriskiriama sau (`this != &o`) | `RuleOfFive()` demonstracija |
+| 5 | Perkėlimo priskyrimo operatorius | `Studentas& operator=(Studentas&& o) noexcept` | Kaip perkėlimo konstruktorius, bet į jau egzistuojantį objektą; taip pat tikrina `this != &o` | `RuleOfFive()` demonstracija; elementų perstūmimas `remove_if` ir rūšiavimo metu |
+| 6 | Destruktorius | `~Studentas()` | Išvalo `vardas_`, `pavarde_`, `namuDarbai_` ir nustato `egzaminas_`, `galutinisVid_`, `galutinisMed_` į 0 | Automatiškai kiekvieno objekto gyvavimo pabaigoje |
+ 
+Perkėlimo metodai pažymėti `noexcept`, kad `std::vector` plečiantis perkeltų, o ne kopijuotų elementus. Būtent jų dėka
+strategijos S2, Mano ir Optimizuota perkelia studentus tarp konteinerių, o ne kopijuoja (žr. [Dalijimo strategijos](#dalijimo-strategijos)).
+Kai deklaruotas destruktorius, kompiliatorius perkėlimo operacijų pats nesugeneruoja – todėl jos parašytos rankiniu būdu.
+ 
+### Demonstracija (meniu punktas 6)
+ 
+Pasirinkus **6 Konstruktorių demonstracija** paleidžiama funkcija `RuleOfFive()`. Ji žingsnis po žingsnio sukuria
+studentus ir po kiekvieno veiksmo išveda abu dalyvaujančius objektus, naudodama perdengtą `operator<<`:
+ 
+| Žingsnis | Kodas | Ką matome |
+|---|---|---|
+| 1. Paprastas konstruktorius | `Studentas s1("Jonas", "Jonaitis", {8, 9, 10}, 9);` | Sukurtas `s1` su apskaičiuotais galutiniais balais |
+| 2. Kopijavimo konstruktorius | `Studentas s2(s1);` | `s2` – tokia pati kopija; `s1` nepasikeitė |
+| 3. Perkėlimo konstruktorius | `Studentas s3(move(s1));` | `s3` turi `s1` duomenis, o `s1` vardas ir pavardė tapo **tušti** |
+| 4. Kopijavimo priskyrimas | `Studentas s4; s4 = s2;` | `s4` tapo `s2` kopija; `s2` nepasikeitė |
+| 5. Perkėlimo priskyrimas | `Studentas s5; s5 = move(s3);` | `s5` turi `s3` duomenis, o `s3` vardas ir pavardė tapo **tušti** |
+ 
+![Konstruktorių demonstracija](nuotraukos/konstruktoriu-demonstracija.png)
+ 
+Išvada: kopijuojant pradinis objektas lieka nepakitęs, o perkeliant jo `string` ir `vector` laukai „ištuštinami“ –
+duomenys perduodami be kopijavimo, todėl perkėlimas yra greitesnis.
+ 
+---
+ 
+## Perdengti įvesties ir išvesties operatoriai
+ 
+Klasei `Studentas` perdengti du operatoriai, deklaruoti kaip `friend` (kad galėtų pasiekti privačius laukus):
+ 
+```cpp
+istream& operator>>(istream& in, Studentas& a);          // nuskaito vardą ir pavardę
+ostream& operator<<(ostream& out, const Studentas& a);   // išveda studento eilutę
+```
+ 
+| Operatorius | Ką daro | Kur naudojamas |
+|---|---|---|
+| `operator>>` | Iš srauto nuskaito du žodžius – **vardą** ir **pavardę** – ir įrašo juos į studento laukus | `IvestiStudenta()`: `cin >> studentas;` |
+| `operator<<` | Išveda vieną lentelės eilutę: vardas (plotis 15), pavardė (20), galutinis pagal vidurkį (20) ir pagal medianą (20), su 2 skaitmenimis po kablelio | `IvestiStudenta()` (įvedus studentą), `RuleOfFive()` (demonstracija) |
+ 
+Namų darbų ir egzamino pažymiai per `operator>>` nenuskaitomi: jiems reikia atskiro tikrinimo (intervalas [0; 10],
+tuščia eilutė, ne skaičius), todėl jie apdorojami `IvestiStudenta()` funkcijoje.
+ 
+### Duomenų įvestis
+ 
+Programoje yra trys duomenų įvedimo būdai:
+ 
+| Būdas | Kaip veikia | Kas naudojama |
+|---|---|---|
+| **Rankiniu būdu** | Vardas ir pavardė nuskaitomi per `cin >> studentas` (perdengtas `operator>>`). Namų darbų pažymiai įvedami po vieną (baigiama paspaudus ENTER tuščioje eilutėje), egzamino pažymys – vienas. Kiekvienas pažymys tikrinamas: turi būti skaičius iš [0; 10], kitaip rodoma klaida ir prašoma įvesti dar kartą. Jei egzaminas įvedamas ir paspaudžiamas tik ENTER, jis laikomas 0 | `IvestiStudenta()`, `pridetiND()`, `setEgzaminas()` |
+| **Automatiniu (atsitiktiniu)** | Vardas ir pavardė įvedami ranka, o namų darbų pažymiai (vartotojo nurodytas kiekis) ir egzamino pažymys sugeneruojami atsitiktinai – realūs skaičiai iš [0; 10], išvedami su 2 skaitmenimis po kablelio. Generatorius – `mt19937` | `IvestiStudenta()`, `uniform_real_distribution` |
+| **Iš failo** | Nuskaitoma visa lentelė: pirma eilutė (antraštė) praleidžiama, kiekvienoje eilutėje pirmi du žodžiai – vardas ir pavardė, visi tolesni skaičiai – pažymiai, **paskutinis** – egzaminas. Eilutės su blogais pažymiais atmetamos ir surenkamos į sąrašą `neteisingi` | `SkaitytiIsFailo()` (`ifstream` + `stringstream`) |
+ 
+![Įvedimas ranka](nuotraukos/ivedimas-ranka.png)
+ 
+![Atsitiktinis generavimas](nuotraukos/ivedimas-generavimas.png)
+ 
+![Nuskaitymas iš failo](nuotraukos/nuskaitymas-is-failo.png)
+ 
+### Duomenų išvestis
+ 
+| Būdas | Kaip veikia | Kas naudojama |
+|---|---|---|
+| **Į ekraną** | Įvedus naują studentą išvedama lentelė su vardu, pavarde, galutiniais balais ir objekto **adresu atmintyje**. Eilutė formuojama perdengtu `operator<<`. Taip pat į ekraną išvedami laikai, klaidų pranešimai ir blogų įrašų sąrašas | `cout << studentas`, `RuleOfFive()` |
+| **Į failą** | Padalinti ir surūšiuoti studentai įrašomi į `vargseliai.txt` ir `kietuoliai.txt`: antraštė, brūkšnių eilutė ir po vieną eilutę kiekvienam studentui (vardas, pavardė, galutinis pagal vidurkį ir medianą, 2 skaitmenys po kablelio). Eilutės formatas toks pat kaip ir `operator<<` išvedamas į ekraną | `IrasytiStudentus()` (`ofstream` + getteriai) |
+ 
+![Išvestis į ekraną](nuotraukos/israsymas-ekranas.png)
+ 
+![Išvestis į failą](nuotraukos/israsymas-failas.png)
+ 
+---
+ 
 ## Naudojimo instrukcija
 
 Paleidus programą rodomas meniu:
@@ -162,10 +280,11 @@ Paleidus programą rodomas meniu:
 3  Padalinti, surusiuoti ir irasyti studentus i failus
 4  Sukurti testavimo failus (5 failai)
 5  Paleisti testavimus (5 failai)
-6  Iseiti
+6  Konstruktriu demonstracija
+7  Iseiti
 ```
 
-**Rekomenduojama eiga tyrimui:** `4` (sukuria testinius failus vieną kartą) → `5` (paleidžia testus) → `6`.
+**Rekomenduojama eiga tyrimui:** `4` (sukuria testinius failus vieną kartą) → `5` (paleidžia testus) → `7`.
 
 1. **Įvesti naują studentą** – prašoma vardo ir pavardės, tada pasirenkama, ar namų darbų pažymius
    įvesti ranka (baigiama paspaudus ENTER tuščioje eilutėje), ar sugeneruoti atsitiktinai. Tas pats
@@ -181,7 +300,14 @@ Paleidus programą rodomas meniu:
 4. **Sukurti testavimo failus** – žr. [Testiniai failai](#testiniai-failai).
 5. **Paleisti testavimus** – kiekvienai strategijai, kiekvienam konteineriui (`vector`, `list`) ir
    kiekvienam iš 5 failų atliekamas skaitymas, dalijimas, rūšiavimas ir įrašymas (3 kartai), išvedami laikų vidurkiai.
-6. **Išeiti**.
+6. **Konstruktorių demonstracija** – parodo visus penkių metodų taisyklės metodus veikiant
+   (žr. [Demonstracija](#demonstracija-meniu-punktas-6)).
+7. **Išeiti**.
+
+
+![Dalijimas, rūšiavimas ir įrašymas](nuotraukos/dalijimas-rusiavimas.png)
+
+![Testavimas](nuotraukos/testavimas.png)
 
 ### Testiniai failai
 
@@ -389,6 +515,7 @@ Visi laikai – sekundėmis, 3 testų vidurkis. Greičiausia strategija kiekvien
 | `v0.3` | `v0.3` | Šablonai, `vector` ir `list`, objekto adresas, konteinerių spartos palyginimas |
 | `v1.0` | `v1.0` | Dalijimo strategijos S1, S2, Mano, Optimizuota; efektyvūs STL algoritmai; `CMakeLists.txt`; pilnas README |
 | `v1.1` | `V1.1` | `struct Studentas` pakeista `class`; `struct` / `class` palyginimas; optimizavimo flag'ų tyrimas |
+| `v1.2` | `v1.2` | Penkių metodų taisyklė ir jos demonstracija, perdengti `>>` / `<<` operatoriai, automatinis galutinių balų skaičiavimas |
 
 ### v.pradinė
 
@@ -435,5 +562,16 @@ atsitiktinis generavimas (`rand()`), galutinis balas pagal vidurkį ir medianą,
 - `CMakeLists.txt` papildytas `Studentas.cpp`.
 - Atliktas `struct` (v1.0) ir `class` (v1.1) spartos palyginimas ir optimizavimo flag'ų (`-O1`, `-O2`, `-O3`) tyrimas.
 
+**Apribojimai:** po dalijimo pradinis konteineris išvalomas; `RikiotiStudentus` palaiko tik `vector<Studentas>` ir `list<Studentas>`;
+10 mln. įrašų testui reikia kelių GB RAM (ypač S1).
+
+### v1.2
+ 
+- **Penkių metodų taisyklė:** konstruktorius, kopijavimo konstruktorius, perkėlimo konstruktorius, kopijavimo priskyrimas,
+  perkėlimo priskyrimas ir destruktorius; visi demonstruojami meniu punkte **6** (`RuleOfFive()`).
+- **Perdengti `>>` ir `<<`** darbui su `Studentas`: vardo ir pavardės nuskaitymas, studento eilutės išvedimas.
+- Galutiniai balai skaičiuojami automatiškai (`perskaiciuoti()` konstruktoriuje ir setteriuose); `Vidurkis()` ir `Mediana()` – draugiškos funkcijos.
+- Meniu papildytas punktu „Konstruktorių demonstracija“, išėjimas perkeltas į punktą 7.
+- README papildytas perdengtų metodų, duomenų įvesties ir išvesties aprašymais bei iliustracijomis.
 **Apribojimai:** po dalijimo pradinis konteineris išvalomas; `RikiotiStudentus` palaiko tik `vector<Studentas>` ir `list<Studentas>`;
 10 mln. įrašų testui reikia kelių GB RAM (ypač S1).

@@ -16,6 +16,8 @@ private:
     double galutinisVid_;
     double galutinisMed_;
 
+    void perskaiciuoti(); 
+    
 public:
 
     Studentas(string v = "", string p = "", vector<double> nd ={}, double egz = 0);

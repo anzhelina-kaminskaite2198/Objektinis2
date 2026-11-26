@@ -61,6 +61,11 @@ Studentas::~Studentas(){
 
 }
 
+void Studentas::perskaiciuoti() {
+    galutinisVid_ = Vidurkis(*this);
+    galutinisMed_ = Mediana(*this);
+}
+
 const string& Studentas::vardas() const { return vardas_; }
 const string& Studentas::pavarde() const { return pavarde_; }
 const vector<double>& Studentas::namuDarbai() const { return namuDarbai_; }
@@ -70,9 +75,9 @@ double Studentas::galutinisMed() const { return galutinisMed_; }
 
 void Studentas::setVardas(const string& v) { vardas_ = v; }
 void Studentas::setPavarde(const string& p) { pavarde_ = p; }
-void Studentas::setNamuDarbai(vector<double> nd) { namuDarbai_ = move(nd); }
-void Studentas::pridetiND(double nd) { namuDarbai_.push_back(nd); }
-void Studentas::setEgzaminas(double e) { egzaminas_ = e; }
+void Studentas::setNamuDarbai(vector<double> nd) { namuDarbai_ = move(nd); perskaiciuoti(); }
+void Studentas::pridetiND(double nd) { namuDarbai_.push_back(nd); perskaiciuoti(); }
+void Studentas::setEgzaminas(double e) { egzaminas_ = e; perskaiciuoti(); }
 void Studentas::setGalutinisVid(double g) { galutinisVid_ = g; }
 void Studentas::setGalutinisMed(double g) { galutinisMed_ = g; }
 
@@ -84,6 +89,7 @@ ostream& operator<<(ostream& out, const Studentas& a) {
     out << left 
         << setw(15) << a.vardas_ 
         << setw(20) << a.pavarde_ 
+        << fixed << setprecision(2)
         << setw(20) << a.galutinisVid_ 
         << setw(20) << a.galutinisMed_ ;
     return out;

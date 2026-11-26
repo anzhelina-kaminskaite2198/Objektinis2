@@ -26,12 +26,13 @@ int main() {
              << "3  Padalinti, surusiuoti ir irasyti studentus i failus\n"
              << "4  Sukurti testavimo failus (5 failai)\n"
              << "5  Paleisti testavimus (5 failai)\n"
-             << "6  Iseiti\n\n"
+             << "6  Konstruktriu demonstracija\n"
+             << "7  Iseiti\n\n"
              << "Pasirinkite veiksma: ";
 
         cin >> pasirinkimas;
         
-        if (!IvedimoKlaidos(pasirinkimas, 6)) { continue; }
+        if (!IvedimoKlaidos(pasirinkimas, 7)) { continue; }
         
         switch (pasirinkimas) {
         
@@ -95,6 +96,10 @@ int main() {
                 continue;
             }
             case 6:{
+                RuleOfFive();
+                continue;
+            }
+            case 7:{
                 return 0;
             }
             default:

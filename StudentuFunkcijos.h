@@ -418,6 +418,38 @@ double Dalyti(Strategija strategija, Container& studentai, Container& vargseliai
     return 0.0;
 }
 
+inline void RuleOfFive(){
+    cout << "\n\n1. Paprastas konstruktorius:\n\n";
+    Studentas s1("Jonas", "Jonaitis", { 8, 9, 10 }, 9);
+    cout << "Kodas: Studentas s1(\"Jonas\", \"Jonaitis\", { 8, 9, 10 }, 9); \n" 
+         <<"studentas 1: " << s1;
+
+    cout << "\n\n2. Kopijavimo konstruktorius:\n\n";
+    Studentas s2(s1);
+    cout << "Kodas: Studentas s2(s1); \n"
+         <<"studentas 1: " << s1 << endl
+         <<"studentas 2: " << s2;
+
+    cout << "\n\n3. Perkelimo konstruktorius:\n\n";
+    Studentas s3(move(s1));
+    cout << "Kodas: Studentas s3(move(s1)); \n"
+         <<"studentas 1: " << s1 << endl
+         <<"studentas 3: " << s3;
+
+    cout << "\n\n4. Kopijavimo priskyrimo operatorius:\n";
+    Studentas s4;
+    s4 = s2;
+    cout << "Kodas: Studentas s4; s4 = s2; \n\n"
+         <<"studentas 2: " << s2 << endl
+         <<"studentas 4: " << s4;
+
+    cout << "\n\n5. Perkelimo priskyrimo operatorius:\n\n";
+    Studentas s5;
+    s5 = move(s3);
+    cout << "Kodas: Studentas s5; s5 = move(s3); \n"
+         <<"studentas 3: " << s3 << endl
+         <<"studentas 5: " << s5;
+}
 
 
 template <typename Container, typename Lambda>
