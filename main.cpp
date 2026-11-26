@@ -12,6 +12,7 @@ using namespace std;
 
 
 int main() {
+    //Zmogus zmogus;
     vector<Studentas> studentai;
     list<Studentas> studentaiList;
 

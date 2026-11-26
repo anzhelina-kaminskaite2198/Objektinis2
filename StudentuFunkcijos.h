@@ -451,7 +451,6 @@ inline void RuleOfFive(){
          <<"studentas 5: " << s5;
 }
 
-
 template <typename Container, typename Lambda>
 void RikiotiStudentus(Container& v, Lambda kriterijus){
     if constexpr(is_same_v<Container, vector<Studentas>>){
@@ -479,7 +478,6 @@ double RusiuotiStudentus(Container& v, int pagal) {
  
     return t.PraejesLaikas();
 }
-
 
 
 template <typename Container>

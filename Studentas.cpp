@@ -102,15 +102,11 @@ void Studentas::spausdinti() const {
     cout << *this;
 }
 
-const string& Studentas::vardas() const { return vardas_; }
-const string& Studentas::pavarde() const { return pavarde_; }
 const vector<double>& Studentas::namuDarbai() const { return namuDarbai_; }
 double Studentas::egzaminas() const { return egzaminas_; }
 double Studentas::galutinisVid() const { return galutinisVid_; }
 double Studentas::galutinisMed() const { return galutinisMed_; }
 
-void Studentas::setVardas(const string& v) { vardas_ = v; }
-void Studentas::setPavarde(const string& p) { pavarde_ = p; }
 void Studentas::setNamuDarbai(vector<double> nd) { namuDarbai_ = move(nd); perskaiciuoti(); }
 void Studentas::pridetiND(double nd) { namuDarbai_.push_back(nd); perskaiciuoti(); }
 void Studentas::setEgzaminas(double e) { egzaminas_ = e; perskaiciuoti(); }
