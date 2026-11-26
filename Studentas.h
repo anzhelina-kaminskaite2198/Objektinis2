@@ -7,6 +7,27 @@
 #include <utility>
 using namespace std;
 
+class Zmogus{
+protected:
+    string vardas_;
+    string pavarde_;
+public:
+    Zmogus(string v = "", string p = "");
+    Zmogus(const Zmogus& o);
+    Zmogus(Zmogus&& o) noexcept;
+    Zmogus& operator=(const Zmogus& o);
+    Zmogus& operator=(Zmogus&& o) noexcept;
+
+    virtual ~Zmogus();
+
+    const string& vardas() const;
+    const string& pavarde() const;
+    void setVardas(const string& v);
+    void setPavarde(const string& p);
+
+    virtual void spausdinti() const = 0;
+};
+
 class Studentas {
 private:
     string vardas_;
